@@ -106,11 +106,11 @@ class PersonalizedBase(Dataset):
         example["caption"] = text
 
         if self.center_crop and image.width != image.height:
-            im = np.array(image).astype(np.uint8)
-            H, W = im.shape[0], im.shape[1]
+            img = np.array(image).astype(np.uint8)
+            H, W = img.shape[0], img.shape[1]
             crop = min(W, H)
-            im = im[(H - crop) // 2: (H + crop) // 2, (W - crop) // 2: (W + crop) // 2]
-            image = Image.fromarray(im)
+            img = img[(H - crop) // 2: (H + crop) // 2, (W - crop) // 2: (W + crop) // 2]
+            image = Image.fromarray(img)
 
         if self.size is not None:
             if image.width > self.size or image.height > self.size:
