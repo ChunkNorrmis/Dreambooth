@@ -32,6 +32,7 @@ class PersonalizedBase(Dataset):
         reg=False
     ):
 
+        super().__init__()
         self.data_root = data_root
         self.image_paths = find_images(self.data_root)
         self.num_images = len(self.image_paths)
