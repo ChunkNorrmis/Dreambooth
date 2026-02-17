@@ -1,7 +1,6 @@
 import os
 import numpy as np
-from PIL import Image
-from PIL.ImageEnhance import Sharpness as sharpen
+from PIL import Image, ImageEnhance
 from torch.utils.data import Dataset
 import random
 
@@ -120,7 +119,7 @@ class PersonalizedBase(Dataset):
         if random.random() < self.flip_p:
             image = random.choice([
                 image.transpose(method=random.randint(0, 4)),
-                sharpen(image).enhance(random.uniform(-1.0, 2.0))
+                ImageEnhance.Sharpness(image).enhance(random.uniform(-1.0, 2.0))
             ])
 
         img = np.array(image).astype(np.uint8)
