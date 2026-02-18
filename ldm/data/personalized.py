@@ -59,7 +59,7 @@ class PersonalizedBase(Dataset):
                               "bicubic": PIL.Image.BICUBIC,
                               "lanczos": PIL.Image.LANCZOS,
                               }[interpolation]
-        self.flip = flip_p
+        self.odds = flip_p
         self.reg = reg
         if self.reg and self.coarse_class_text:
             self.reg_tokens = OrderedDict([('C', self.coarse_class_text)])
@@ -89,15 +89,15 @@ class PersonalizedBase(Dataset):
                       (w - crop) // 2:(w + crop) // 2]
             image = Image.fromarray(img)
 
-        if image.width > self.size or image.height > self.size:
+        if image.width != self.size or image.height != self.size:
             image = image.resize((self.size, self.size), resample=self.interpolation, reducing_gap=3)
 
-        if self.flip > random.random():
+        if self.odds > random.random():
             image = random.choice([
                 image.transpose(random.randrange(0, 2)),
                 Sharpen(image).enhance(random.uniform(1.1, 3.0)),
                 image.filter(ImageFilter.BLUR),
-                image.transpose(random.randrange(2, 5)),
+                image.transpose(random.randrange(2, 5))
             ])
             
         image = np.array(image).astype(np.uint8)
