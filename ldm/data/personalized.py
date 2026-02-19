@@ -64,6 +64,9 @@ class PersonalizedBase(Dataset):
             self.reg_tokens = OrderedDict([('C', self.coarse_class_text)])
 
 
+    def __len__(self):
+        return self._length
+
     def augment(self, image):
         return random.choice([
             image.transpose(Image.Transpose.ROTATE_180),
@@ -73,9 +76,6 @@ class PersonalizedBase(Dataset):
             image.transpose(Image.Transpose.ROTATE_270),
             ImageEnhance.Sharpness(image).enhance(random.uniform(0.5, 2.0))
         ])
-
-    def __len__(self):
-        return self._length
 
     def __getitem__(self, i):
         example = {}
@@ -92,7 +92,7 @@ class PersonalizedBase(Dataset):
             example["caption"] = caption_from_path(image_path, self.data_root, self.coarse_class_text, self.placeholder_token)
 
         if self.center_crop and image.width != image.height:
-            img = np.array(image).astype(np.uint8)
+            img = np.asarray(image).astype(np.uint8)
             h, w = img.shape[0], img.shape[1]
             crop = min(h, w)
             img = img[(h - crop) // 2:(h + crop) // 2,
@@ -102,7 +102,7 @@ class PersonalizedBase(Dataset):
         if image.width != self.size or image.height != self.size:
             image = image.resize((self.size, self.size), resample=self.interpolation, reducing_gap=3)
 
-        if random.random() < self.chance:
+        if self.chance > random.random():
             image = self.augment(image)
             
         image = np.array(image).astype(np.uint8)
