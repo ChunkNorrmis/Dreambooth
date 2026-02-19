@@ -15,6 +15,8 @@ class LSUNBase(Dataset):
                  interpolation="bicubic",
                  flip_p=0.5
                  ):
+
+        super().__init__()
         self.data_paths = txt_file
         self.data_root = data_root
         with open(self.data_paths, "r") as f:
