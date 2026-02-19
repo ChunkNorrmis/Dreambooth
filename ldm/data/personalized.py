@@ -30,14 +30,11 @@ class PersonalizedBase(Dataset):
                  reg=False
                  ):
 
+        super().__init__()
         self.data_root = data_root
-
         self.image_paths = find_images(self.data_root)
-
-        # self._length = len(self.image_paths)
         self.num_images = len(self.image_paths)
         self._length = self.num_images
-
         self.placeholder_token = placeholder_token
         self.token_only = token_only
         self.per_image_tokens = per_image_tokens
