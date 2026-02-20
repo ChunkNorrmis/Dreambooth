@@ -50,25 +50,25 @@ class LSUNBase(Dataset):
             image = image.convert("RGB")
 
         if image.width != image.height:
-            img = np.array(image).astype(np.uint8)
-            h, w, = img.shape[0], img.shape[1]
+            image = np.array(image).astype(np.uint8)
+            h, w, = image.shape[0], image.shape[1]
             crop = min(h, w)
-            img = img[(h - crop) // 2:(h + crop) // 2,
+            image = image[(h - crop) // 2:(h + crop) // 2,
                       (w - crop) // 2:(w + crop) // 2]
-            image = Image.fromarray(img)
+            image = Image.fromarray(image)
 
         if image.width != self.size or image.height != self.size:
             image = image.resize((self.size, self.size), resample=self.interpolation, reducing_gap=3)
 
         if random.random() < self.chance:
             image = random.choice([
-                image.transpose(random.randrange(0, 2)),
-                image.transpose(random.randrange(2, 5)),
+                image.transpose(random.randrange(0, 5)),
                 Sharpen(image).enhance(random.uniform(0.5, 2.0))
             ])
             
         image = np.array(image).astype(np.uint8)
-        example["image"] = (image / 127.5 - 1.0).astype(np.float32)
+        img = (image / 127.5 - 1.0).astype(np.float32)
+        example["image"] = img
         return example
 
 
